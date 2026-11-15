@@ -37,7 +37,25 @@
     <section id="map-section" class="map-section">
       <div class="map-heading"><div><span class="section-kicker">EXPLORE THE COMMUNITY</span><h2>Our world, together.</h2></div><div class="map-controls"><label class="search-label" for="search">Search locations</label><input type="search" id="search" placeholder="Search a country or nickname" aria-label="Search a country or nickname" /></div></div>
       <div class="map-wrap"><div id="map" role="application" aria-label="Interactive collaborative world map"></div><div class="map-overlay"><span class="map-overlay-dot"></span><span id="map-status" aria-live="polite">Loading map…</span></div><div id="demo-banner" class="demo-banner" hidden>DEMO DATA — Replace with your published Google Sheet to show real contributions.</div></div>
-      <div class="below-map"><p><strong>What am I looking at?</strong> The centre of each circle is an intentionally approximate location submitted by a contributor, not their precise position. Circles show a 10 km reference radius, not a verified privacy boundary.</p><button id="refresh" type="button">↻ Refresh contributions</button></div>
+      
+<div class="below-map">
+  <p>
+    <strong>What am I looking at?</strong>
+    Every glowing point represents someone who has joined
+    The Connected Atlas! Click a marker to discover where
+    they're from and see how they say hello in their own language.
+
+    Locations are approximate, based on city or town centres,
+    rather than exact addresses. The glowing connections symbolise
+    our global mapping community, not actual travel routes
+    or personal relationships.
+  </p>
+
+  <button id="refresh" type="button">
+    ↻ Refresh contributions
+  </button>
+</div>
+
       <div id="empty-state" class="empty-state" hidden>🌍 The world is waiting for its first hello! Be the first to add your city and greeting.</div>
     </section>
     <footer><span>Made together for #30DayMapChallenge · Day 16</span><span>Designed for curiosity, not precision. <a href="#privacy">Privacy &amp; participation</a></span></footer>
