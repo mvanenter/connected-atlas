@@ -15,6 +15,8 @@
     { nickname: 'Sample F', country: 'South Africa', latitude: -33.9, longitude: 18.4, note: 'Demo location only.' }
   ];
 
+  // Preview is explicit and clearly labelled; it never writes to Google Sheets.
+  const previewMode = new URLSearchParams(window.location.search).get('preview') === '1';
   let contributions = [];
   const map = L.map('map', {
     worldCopyJump: true,
@@ -29,9 +31,9 @@
   const geography = L.geoJSON(null, {
     interactive: false,
     style: {
-      color: '#247f93',
-      weight: 0.65,
-      opacity: 0.65,
+      color: '#2facc0',
+      weight: 0.8,
+      opacity: 0.8,
       fillColor: '#0b2531',
       fillOpacity: 0.92,
       className: 'atlas-country-lines'
@@ -42,9 +44,9 @@
   const boundaryGlow = L.geoJSON(null, {
     interactive: false,
     style: {
-      color: '#20cce3',
-      weight: 0.85,
-      opacity: 0.30,
+      color: '#36e5f1',
+      weight: 1.15,
+      opacity: 0.44,
       fillOpacity: 0,
       className: 'atlas-coast-glow'
     }
@@ -197,11 +199,25 @@
     $('stat-countries').textContent = new Set(contributions.map(d => d.country.toLowerCase())).size.toLocaleString();
     const count = new Set(contributions.map(d => d.continent.toLowerCase()).filter(Boolean)).size;
     $('stat-continents').textContent = count ? String(count) : '—';
-    $('empty-state').hidden = !!visible.length;
+    const emptyState = $('empty-state');
+    emptyState.hidden = !!visible.length;
+    if (!visible.length) {
+      emptyState.textContent = contributions.length === 0
+        ? '🌍 The world is waiting for its first hello! Be the first to add your city and greeting.'
+        : 'No matching places yet. Try another search.';
+    }
     if (visible.length && q) map.fitBounds(marks.getBounds().pad(.4), { maxZoom: 6 });
   }
 
   async function load() {
+    if (previewMode) {
+      contributions = demo;
+      $('demo-banner').hidden = false;
+      $('demo-banner').textContent = 'PREVIEW ONLY — Six fictional sample contributors. Not real submissions.';
+      setStatus('Preview mode · sample locations only');
+      render();
+      return;
+    }
     if (!config.csvUrl) {
       contributions = config.showDemoIfNotConfigured ? demo : [];
       $('demo-banner').hidden = !config.showDemoIfNotConfigured;

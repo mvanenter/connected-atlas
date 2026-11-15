@@ -427,3 +427,22 @@ footer a {
 .leaflet-control-attribution a { color: #9be8f1 !important; }
 .leaflet-control-zoom a { background: #112c38; color: #d9faff; border-color: #335968; }
 .leaflet-control-zoom a:hover { background: #205164; color: white; }
+
+
+/* Polished geographic outlines: targeted vector styling only. */
+.atlas-coast-glow {
+  filter: drop-shadow(0 0 3px rgba(43, 233, 246, .72))
+          drop-shadow(0 0 8px rgba(17, 186, 228, .26));
+}
+.atlas-country-lines {
+  filter: drop-shadow(0 0 2px rgba(33, 205, 233, .24));
+}
+/* Clearly label the optional private preview in the map itself. */
+.demo-banner {
+  background: rgba(12, 42, 56, .96);
+  border: 1px solid rgba(69, 237, 250, .4);
+}
+.empty-state {
+  color: #3b716e;
+  font-weight: 600;
+}
