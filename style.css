@@ -487,3 +487,46 @@ footer a {
     transform: scale(1.12);
   }
 }
+
+/* Accessible, stationary neon markers for overlapping contributions */
+.atlas-person-marker {
+  background: transparent;
+  border: 0;
+  filter: drop-shadow(0 0 5px rgba(68, 239, 255, .65));
+}
+.atlas-person-marker > span { position: absolute; display: block; border-radius: 50%; }
+.atlas-person-halo {
+  inset: 0;
+  background: radial-gradient(circle, rgba(31,239,255,.30) 0%, rgba(31,239,255,.10) 38%, transparent 70%);
+}
+.atlas-person-ring {
+  inset: 9px;
+  border: 1.5px solid rgba(87, 248, 255, .9);
+  background: rgba(39, 210, 230, .25);
+  box-shadow: 0 0 9px rgba(60, 239, 255, .7);
+}
+.atlas-person-core {
+  inset: 13px;
+  background: #e5ffff;
+  box-shadow: 0 0 5px #e5ffff, 0 0 15px #50f1ff;
+}
+.atlas-cluster-icon {
+  display: grid;
+  place-items: center;
+  color: #e9ffff;
+  font: 700 15px 'Space Grotesk', sans-serif;
+  border: 1.5px solid #95f9ff;
+  border-radius: 50%;
+  background: radial-gradient(circle at 40% 35%, #14768a, #063848 75%);
+  box-shadow: 0 0 0 5px rgba(34, 227, 242, .12),
+              0 0 14px rgba(62, 238, 255, .72),
+              inset 0 0 9px rgba(85, 244, 255, .30);
+}
+.atlas-cluster-count { display: block; text-align: center; line-height: 1; }
+.leaflet-marker-icon.atlas-cluster-icon:hover,
+.leaflet-marker-icon.atlas-person-marker:hover {
+  filter: brightness(1.18);
+}
+/* Absolutely no pulsing/bouncing motion */
+.atlas-person-marker, .atlas-cluster-icon, .atlas-person-marker *,
+.atlas-marker-pulse { animation: none !important; transition: none; }

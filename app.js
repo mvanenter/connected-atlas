@@ -11,7 +11,10 @@
     { nickname: 'CapeCarto', country: 'South Africa', continent: 'Africa', latitude: -33.9, longitude: 18.4, note: 'Sawubona from Cape Town!' },
     { nickname: 'GeoBonjour', country: 'France', continent: 'Europe', latitude: 48.9, longitude: 2.4, note: 'Bonjour from Paris!' },
     { nickname: 'CityMapper', country: 'Japan', continent: 'Asia', latitude: 35.7, longitude: 139.7, note: 'こんにちは from Tokyo!' },
-    { nickname: 'SouthernHello', country: 'New Zealand', continent: 'Oceania', latitude: -43.5, longitude: 172.6, note: 'Kia ora from Christchurch!' }
+    { nickname: 'SouthernHello', country: 'New Zealand', continent: 'Oceania', latitude: -43.5, longitude: 172.6, note: 'Kia ora from Christchurch!' },
+    { nickname: 'LondonMapperA', country: 'United Kingdom', continent: 'Europe', latitude: 51.5074, longitude: -0.1278, note: 'Hello from London!' },
+    { nickname: 'LondonMapperB', country: 'United Kingdom', continent: 'Europe', latitude: 51.5074, longitude: -0.1278, note: 'Namaste from London!' },
+    { nickname: 'LondonMapperC', country: 'United Kingdom', continent: 'Europe', latitude: 51.5074, longitude: -0.1278, note: 'Salut from London!' }
   ];
 
   const previewMode = new URLSearchParams(window.location.search).get('preview') === '1';
@@ -92,7 +95,50 @@
   loadWorld();
 
   const connections = L.layerGroup().addTo(map);
-  const marks = L.featureGroup().addTo(map);
+  // One marker per contribution. Leaflet.markercluster groups nearby markers and
+  // spiderfies coincident city-centre coordinates so every greeting stays accessible.
+  const clusteringEnabled = typeof L.markerClusterGroup === 'function';
+  const marks = clusteringEnabled ? L.markerClusterGroup({
+    maxClusterRadius: 48,
+    spiderfyOnMaxZoom: true,
+    zoomToBoundsOnClick: true,
+    showCoverageOnHover: false,
+    animate: false,
+    spiderLegPolylineOptions: { color: '#66ecf8', weight: 1.4, opacity: 0.72 },
+    iconCreateFunction(cluster) {
+      const count = cluster.getChildCount();
+      const size = count >= 100 ? 52 : count >= 10 ? 46 : 40;
+      return L.divIcon({
+        html: '<span class="atlas-cluster-count">' + count + '</span>',
+        className: 'atlas-cluster-icon',
+        iconSize: [size, size],
+        iconAnchor: [size / 2, size / 2]
+      });
+    }
+  }).addTo(map) : L.featureGroup().addTo(map);
+
+  // A 10 km reference radius appears when a contributor is clicked, not as
+  // hundreds of overlapping circles under dense city-centre clusters.
+  let selectedRadius = null;
+  function showReferenceRadius(location) {
+    if (selectedRadius) map.removeLayer(selectedRadius);
+    selectedRadius = L.circle(location, {
+      radius: config.radiusMetres || 10000,
+      color: '#65f4ff',
+      fillColor: '#2edbe9',
+      opacity: 0.7,
+      fillOpacity: 0.08,
+      weight: 1.1,
+      interactive: false,
+      className: 'atlas-marker-radius'
+    }).addTo(map);
+  }
+  map.on('popupclose', () => {
+    if (selectedRadius) {
+      map.removeLayer(selectedRadius);
+      selectedRadius = null;
+    }
+  });
 
   function setStatus(value) {
     $('map-status').textContent = value;
@@ -249,57 +295,25 @@
   }
 
   function addMarker(position, data) {
-    const halo = L.circleMarker(position, {
-      radius: 14,
-      stroke: false,
-      fillColor: '#4cf4ff',
-      fillOpacity: 0.10,
-      className: 'atlas-marker-halo'
+    // A CSS-only, stationary neon marker, compatible with marker clustering.
+    const icon = L.divIcon({
+      className: 'atlas-person-marker',
+      html: '<span class="atlas-person-halo"></span><span class="atlas-person-ring"></span><span class="atlas-person-core"></span>',
+      iconSize: [34, 34],
+      iconAnchor: [17, 17],
+      popupAnchor: [0, -15]
     });
-    halo.bindPopup(popupContent(data));
-    marks.addLayer(halo);
-
-    const pulse = L.circleMarker(position, {
-      radius: 8,
-      color: '#65fbff',
-      weight: 1.2,
-      opacity: 0.95,
-      fillColor: '#34dff2',
-      fillOpacity: 0.22,
-      className: 'atlas-marker-pulse'
-    });
-    pulse.bindPopup(popupContent(data));
-    marks.addLayer(pulse);
-
-    const circle = L.circle(position, {
-      radius: config.radiusMetres || 10000,
-      color: '#41f1ff',
-      fillColor: '#29d7ea',
-      weight: 1.3,
-      opacity: 0.72,
-      fillOpacity: 0.08,
-      className: 'atlas-marker-radius'
-    });
-    circle.bindPopup(popupContent(data));
-    marks.addLayer(circle);
-
-    const core = L.circleMarker(position, {
-      radius: 4.5,
-      color: '#f3ffff',
-      weight: 1.0,
-      opacity: 1,
-      fillColor: '#9cfeff',
-      fillOpacity: 1,
-      className: 'atlas-marker-core'
-    });
-    core.bindPopup(popupContent(data));
-    marks.addLayer(core);
+    const marker = L.marker(position, { icon, title: data.nickname + ' · ' + data.country });
+    marker.bindPopup(popupContent(data));
+    marker.on('click', () => showReferenceRadius(position));
+    marks.addLayer(marker);
   }
 
   function render() {
     const q = $('search').value.trim().toLowerCase();
     const visible = contributions.filter(d => [d.nickname, d.country, d.note].some(x => x.toLowerCase().includes(q)));
 
+    if (selectedRadius) { map.removeLayer(selectedRadius); selectedRadius = null; }
     marks.clearLayers();
     addConnections(visible);
     visible.forEach(d => addMarker([d.latitude, d.longitude], d));
@@ -317,14 +331,14 @@
         : 'No matching places yet. Try another search.';
     }
 
-    if (visible.length && q) map.fitBounds(marks.getBounds().pad(.35), { maxZoom: 6 });
+    if (visible.length && q && marks.getBounds().isValid()) map.fitBounds(marks.getBounds().pad(.35), { maxZoom: 6 });
   }
 
   async function load() {
     if (previewMode) {
       contributions = demo;
       $('demo-banner').hidden = false;
-      $('demo-banner').textContent = 'PREVIEW ONLY — Six fictional sample contributors. Not real submissions.';
+      $('demo-banner').textContent = 'PREVIEW ONLY — Fictional sample contributors, including three in the same city. Not real submissions.';
       setStatus('Preview mode · sample locations only');
       render();
       return;
