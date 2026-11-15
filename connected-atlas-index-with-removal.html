@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="A collaborative, privacy-conscious world map of the #30DayMapChallenge community." />
+  <title>Where in the World Are We? · Collaborative Map</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <link rel="stylesheet" href="style.css" />
+  <script defer src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script defer src="config.js"></script>
+  <script defer src="app.js"></script>
+</head>
+<body>
+  <main class="shell">
+    <header class="topbar">
+      <div class="brand"><div class="brand-logo" aria-hidden="true">✳</div><div><strong>THE CONNECTED ATLAS</strong><span>#30DayMapChallenge · Day 16</span></div></div>
+      <a class="top-link" href="https://30daymapchallenge.com/" target="_blank" rel="noopener noreferrer">About the challenge ↗</a>
+    </header>
+    <section class="hero">
+      <div class="hero-copy">
+        <span class="eyebrow"><span class="status-dot"></span> A COLLABORATIVE WORLD MAP</span>
+        <h1>Where in the<br /><em>world</em> are we?</h1>
+        <p>One map. Many places. A community of map lovers connecting across the globe. Add your approximate location and become part of the story.</p>
+        <div class="hero-actions"><a id="join-link" class="primary-button disabled" aria-disabled="true">✳ &nbsp; Add your location</a><a href="#map-section" class="secondary-button">Explore the map ↗</a></div>
+        <p class="privacy-note">◌ We display approximate locations only — never home addresses. Each circle represents a 10 km radius around a contributed approximate point.</p>
+      </div>
+      <div class="stats" aria-label="Map statistics">
+        <div><strong id="stat-mappers">0</strong><span>CONTRIBUTORS</span></div>
+        <div><strong id="stat-countries">0</strong><span>COUNTRIES</span></div>
+        <div><strong id="stat-continents">0</strong><span>CONTINENTS</span></div>
+      </div>
+    </section>
+    <section id="map-section" class="map-section">
+      <div class="map-heading"><div><span class="section-kicker">EXPLORE THE COMMUNITY</span><h2>Our world, together.</h2></div><div class="map-controls"><label class="search-label" for="search">Search locations</label><input type="search" id="search" placeholder="Search a country or nickname" aria-label="Search a country or nickname" /></div></div>
+      <div class="map-wrap"><div id="map" role="application" aria-label="Interactive collaborative world map"></div><div class="map-overlay"><span class="map-overlay-dot"></span><span id="map-status" aria-live="polite">Loading map…</span></div><div id="demo-banner" class="demo-banner" hidden>DEMO DATA — Replace with your published Google Sheet to show real contributions.</div></div>
+      <div class="below-map"><p><strong>What am I looking at?</strong> The centre of each circle is an intentionally approximate location submitted by a contributor, not their precise position. Circles show a 10 km reference radius, not a verified privacy boundary.</p><button id="refresh" type="button">↻ Refresh contributions</button></div>
+      <div id="empty-state" class="empty-state" hidden>🌍 The world is waiting for its first hello! Be the first to add your city and greeting.</div>
+    </section>
+    <footer><span>Made together for #30DayMapChallenge · Day 16</span><span>Designed for curiosity, not precision. <a href="#privacy">Privacy &amp; participation</a></span></footer>
+    <section id="privacy" class="privacy-section">
+      <h2>Privacy &amp; participation</h2>
+      <p>To join The Connected Atlas, share a nearby city or town, your country, a nickname and a greeting in your own language. We convert the city or town into approximate map coordinates, so please do not share home, school or workplace addresses. Approved contributions appear publicly with their nickname, country, greeting and approximate location. The 10 km circles are visual references, not privacy guarantees.</p>
+      <p>Changed your mind? <a href="https://docs.google.com/forms/d/e/1FAIpQLSdTSlL6mzy7rDjnWA8p6sLuMTB_vZqVmR0TFMIQItkQoIrv9A/viewform" target="_blank" rel="noopener noreferrer">Request removal of your contribution</a>. We review requests before removing matching contributions.</p>
+    </section>
+  </main>
+</body>
+</html>
