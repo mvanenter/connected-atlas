@@ -13,9 +13,12 @@
   // Demo is visible only before configuration; it is never mixed with real submissions.
   let contributions = [];
   const map = L.map('map', { worldCopyJump: true, minZoom: 2, maxZoom: 13 }).setView([15, 15], 2);
-  L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
-    subdomains: 'abcd', maxZoom: 20, attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
-  }).addTo(map);
+  
+L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; OpenStreetMap contributors',
+    maxZoom: 19
+}).addTo(map);
+
   const marks = L.featureGroup().addTo(map);
   const continents = {
     // Country list below is deliberately indicative for the COUNTRIES represented in demo only;
