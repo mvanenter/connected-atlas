@@ -446,3 +446,45 @@ footer a {
   color: #3b716e;
   font-weight: 600;
 }
+
+
+/* ----------------------------------------------------
+   GLOW BOOST — stronger contributor markers and arcs
+   ---------------------------------------------------- */
+.atlas-connection-glow {
+  filter: drop-shadow(0 0 8px rgba(71, 245, 255, .34));
+  pointer-events: none;
+}
+.atlas-connection-core {
+  filter: drop-shadow(0 0 4px rgba(106, 251, 255, .55));
+  pointer-events: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.atlas-marker-radius {
+  filter: drop-shadow(0 0 7px rgba(43, 239, 255, .18));
+}
+.atlas-marker-halo {
+  filter: drop-shadow(0 0 12px rgba(78, 246, 255, .34))
+          drop-shadow(0 0 22px rgba(78, 246, 255, .18));
+}
+.atlas-marker-pulse {
+  filter: drop-shadow(0 0 8px rgba(101, 251, 255, .5));
+  animation: atlasPulse 2.4s ease-in-out infinite;
+  transform-origin: center;
+}
+.atlas-marker-core {
+  filter: drop-shadow(0 0 8px rgba(134, 252, 255, .85))
+          drop-shadow(0 0 16px rgba(84, 244, 255, .45));
+}
+
+@keyframes atlasPulse {
+  0%, 100% {
+    opacity: .82;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.12);
+  }
+}
