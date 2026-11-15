@@ -470,7 +470,6 @@ footer a {
 }
 .atlas-marker-pulse {
   filter: drop-shadow(0 0 8px rgba(101, 251, 255, .5));
-  animation: atlasPulse 2.4s ease-in-out infinite;
   transform-origin: center;
 }
 .atlas-marker-core {
